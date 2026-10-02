@@ -112,8 +112,10 @@ function gcom {
 }
 
 function lazyg {
+  $message = "$args"
+  if (-not $message) { $message = "Update $(Get-Date -Format 'yyyy-MM-dd HH:mm')" }
   git add .
-  git commit -m "$args"
+  git commit -m $message
   git push
 }
 
@@ -163,7 +165,7 @@ ${dim}────────────────────────�
   ${command}gp / gpush${reset}         ${accent}→${reset} ${desc}git push${reset}
   ${command}gpull${reset}              ${accent}→${reset} ${desc}git pull${reset}
   ${command}gs${reset}                 ${accent}→${reset} ${desc}git status${reset}
-  ${command}lazyg <message>${reset}    ${accent}→${reset} ${desc}add + commit + push${reset}
+  ${command}lazyg [message]${reset}    ${accent}→${reset} ${desc}add + commit + push${reset}
 
 ${section}󰘴 System Shortcuts${reset}
 ${dim}────────────────────────────────────────────────────${reset}
