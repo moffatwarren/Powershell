@@ -1,4 +1,4 @@
-oh-my-posh init pwsh --config "C:\Users\moffa\.poshthemes\catppuccin.omp.json" | Invoke-Expression
+oh-my-posh init pwsh --config "C:\Users\warren\.poshthemes\catppuccin.omp.json" | Invoke-Expression
 
 if (Get-Module -ListAvailable -Name Terminal-Icons) {
   Import-Module -Name Terminal-Icons
