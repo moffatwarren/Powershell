@@ -104,7 +104,7 @@ function gp { git push }
 function gpush { git push }
 function gpull { git pull }
 function gcl { git clone $args }
-function g { __zoxide_z github }
+function g { Set-Location -Path "$HOME\GitHub" }
 
 function gcom {
   git add .
