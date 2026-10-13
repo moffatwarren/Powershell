@@ -23,7 +23,8 @@ $settings = Get-Content $settingsPath -Raw | ConvertFrom-Json
 $scheme = Get-Content $schemeFile -Raw | ConvertFrom-Json
 
 # Replace any existing copy of the scheme, then add it
-if (-not $settings.schemes) { $settings | Add-Member -NotePropertyName schemes -NotePropertyValue @() }
+# Check the property itself: an empty "schemes": [] is falsy but still exists
+if (-not $settings.PSObject.Properties["schemes"]) { $settings | Add-Member -NotePropertyName schemes -NotePropertyValue @() }
 $settings.schemes = @($settings.schemes | Where-Object { $_.name -ne $scheme.name }) + $scheme
 
 if (-not $settings.profiles.defaults) {
