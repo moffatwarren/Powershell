@@ -49,10 +49,13 @@ function mkcd ($Path) {
 }
 
 function trash ($Path) {
-  if (Test-Path $Path -PathType Container) {
-    [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory($Path,'OnlyErrorDialogs','SendToRecycleBin')
+  Add-Type -AssemblyName Microsoft.VisualBasic
+  # .NET resolves relative paths from the process start folder, not the current location
+  $fullPath = (Resolve-Path -LiteralPath $Path -ErrorAction Stop).ProviderPath
+  if (Test-Path -LiteralPath $fullPath -PathType Container) {
+    [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory($fullPath,'OnlyErrorDialogs','SendToRecycleBin')
   } else {
-    [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile($Path,'OnlyErrorDialogs','SendToRecycleBin')
+    [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile($fullPath,'OnlyErrorDialogs','SendToRecycleBin')
   }
 }
 
@@ -190,17 +193,9 @@ ${dim}━━━━━━━━━━━━━━━━━━━━━━━━�
 "@
 }
 
-$shouldInitZoxide = $false
+# zoxide init should be at the end of the profile
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
-  $shouldInitZoxide = $true
+  Invoke-Expression (& { (zoxide init --cmd z powershell | Out-String) })
 } else {
   Write-Warning "zoxide is not installed."
-}
-
-# init commands should be at the end of the profile
-if ($shouldInitPosh) {
-  Invoke-Expression (& { (oh-my-posh init pwsh --config $poshTheme | Out-String) })
-}
-if ($shouldInitZoxide) {
-  Invoke-Expression (& { (zoxide init --cmd z powershell | Out-String) })
 }

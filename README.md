@@ -16,7 +16,8 @@ My PowerShell 7 setup for Windows Terminal:
 | `.poshthemes\*.omp.json` | oh-my-posh **prompt** themes, which style only the prompt line | `C:\Users\<you>\.poshthemes\` |
 | `windows-terminal\catppuccin-mocha.json` | Windows Terminal **color scheme** (background, text, and ANSI colors) | Added to Terminal's `settings.json` |
 | `windows-terminal\install-theme.ps1` | Adds the color scheme and Nerd Font to Windows Terminal | Run it from the repo |
-| `setup.ps1` | Does every step below automatically | Run it from the repo |
+| `setup.bat` | Double-click installer: installs PowerShell 7 if needed, then runs `setup.ps1` | Run it from the repo |
+| `setup.ps1` | Does every step below automatically | Run it from the repo (or via `setup.bat`) |
 
 > The Catppuccin look has **two parts**: the oh-my-posh theme (the prompt) and the Windows Terminal color scheme (everything else). You need both.
 
@@ -34,17 +35,25 @@ My PowerShell 7 setup for Windows Terminal:
 
 ## Quick install (automatic)
 
-Open **PowerShell 7** in Windows Terminal and run:
+Clone or download the repo, then double-click **`setup.bat`** (don't run it as administrator). It:
+
+- installs PowerShell 7 with winget if it's missing
+- sets the execution policy to `RemoteSigned` for your user so the profile can load
+- installs oh-my-posh, zoxide, Terminal-Icons, and the JetBrainsMono Nerd Font (skipping anything already installed)
+- copies the prompt themes and profile, backing up any existing profile as `$PROFILE.<timestamp>.bak`
+- applies Catppuccin Mocha to Windows Terminal and makes PowerShell 7 the default profile (backing up `settings.json`)
+- checks the profile loads without errors
+
+It's safe to re-run on a PC that's already set up. Then close and reopen Windows Terminal.
+
+Or from **PowerShell 7**:
 
 ```powershell
-cd $HOME\Documents\GitHub
+cd $HOME\GitHub
 git clone https://github.com/moffatwarren/Powershell.git
 cd Powershell
-Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-.\setup.ps1
+.\setup.bat
 ```
-
-Then close and reopen Windows Terminal.
 
 ## Manual install
 
@@ -52,7 +61,7 @@ Run each step in **PowerShell 7**.
 
 1. **Clone the repo**
    ```powershell
-   cd $HOME\Documents\GitHub
+   cd $HOME\GitHub
    git clone https://github.com/moffatwarren/Powershell.git
    cd Powershell
    ```
@@ -91,16 +100,11 @@ Run each step in **PowerShell 7**.
    ```powershell
    .\windows-terminal\install-theme.ps1
    ```
-   This adds the `Catppuccin Mocha` scheme, makes it the default for all profiles, sets the font to `JetBrainsMono Nerd Font Mono`, and saves a backup of `settings.json` next to the original.
+   This adds the `Catppuccin Mocha` scheme, makes it the default for all profiles, sets the font to `JetBrainsMono Nerd Font Mono` (unless a Nerd Font is already set), makes PowerShell 7 the default profile, and saves a backup of `settings.json` next to the original.
 
    To do it by hand instead: in Windows Terminal open Settings → **Open JSON file**, paste the contents of `windows-terminal\catppuccin-mocha.json` into the `"schemes": [ ... ]` list, and set `"colorScheme": "Catppuccin Mocha"` under `profiles.defaults`.
 
 8. **Restart Windows Terminal.**
-
-9. **Teach zoxide your GitHub folder.** The `g` alias jumps to it, but zoxide only knows folders you've visited, so `cd` into it once:
-   ```powershell
-   cd $HOME\Documents\GitHub
-   ```
 
 ## Changing the prompt theme
 
@@ -121,4 +125,3 @@ More themes: https://ohmyposh.dev/docs/themes
 | Boxes or `?` instead of icons | Nerd Font missing or not selected. Run `oh-my-posh font install JetBrainsMono`, then set Terminal's font to `JetBrainsMono Nerd Font Mono`. |
 | "running scripts is disabled on this system" | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` |
 | `oh-my-posh` / `zoxide` not recognized | Restart the terminal after installing them with winget. |
-| `g` doesn't go anywhere | `cd` into your GitHub folder once so zoxide learns it. |
