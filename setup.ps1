@@ -56,7 +56,12 @@ $fontDirs = "$env:LOCALAPPDATA\Microsoft\Windows\Fonts", "$env:WINDIR\Fonts"
 if (Get-ChildItem $fontDirs -Filter "JetBrainsMonoNerdFont*" -ErrorAction SilentlyContinue) {
   Write-Host "JetBrainsMono Nerd Font is already installed"
 } else {
-  oh-my-posh font install JetBrainsMono --headless
+  # Newer oh-my-posh versions dropped --headless and install non-interactively when given a font name
+  oh-my-posh font install JetBrainsMono
+  # Native commands don't trip $ErrorActionPreference, so check the exit code ourselves
+  if ($LASTEXITCODE -ne 0) {
+    throw "Installing the JetBrainsMono Nerd Font failed (exit code $LASTEXITCODE). Run 'oh-my-posh font install JetBrainsMono' to see why."
+  }
 }
 
 Step "Copying oh-my-posh themes to $HOME\.poshthemes"
