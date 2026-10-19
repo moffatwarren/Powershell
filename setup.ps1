@@ -63,6 +63,20 @@ if (Get-ChildItem $fontDirs -Filter "JetBrainsMonoNerdFont*" -ErrorAction Silent
     throw "Installing the JetBrainsMono Nerd Font failed (exit code $LASTEXITCODE). Run 'oh-my-posh font install JetBrainsMono' to see why."
   }
 }
+# oh-my-posh copies fonts into the per-user folder without the permissions Windows gives fonts it
+# installs itself. The Font Cache service (LOCAL SERVICE) can't read them, so Terminal and
+# Settings can't find the font. Grant read access, then rewrite the registry entries so the
+# service rescans. Runs every time, which also repairs PCs set up before this fix.
+$userFonts = "$env:LOCALAPPDATA\Microsoft\Windows\Fonts"
+if (Test-Path $userFonts) {
+  # S-1-5-19 = LOCAL SERVICE, S-1-15-2-1 = ALL APPLICATION PACKAGES
+  icacls $userFonts /grant "*S-1-5-19:(OI)(CI)(RX)" "*S-1-15-2-1:(OI)(CI)(RX)" /T /Q | Out-Null
+  $fontKey = "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts"
+  foreach ($entry in (Get-ItemProperty $fontKey).PSObject.Properties | Where-Object Name -like "JetBrainsMono*") {
+    Remove-ItemProperty $fontKey -Name $entry.Name
+    New-ItemProperty $fontKey -Name $entry.Name -Value $entry.Value -PropertyType String | Out-Null
+  }
+}
 
 Step "Copying oh-my-posh themes to $HOME\.poshthemes"
 New-Item -ItemType Directory -Force "$HOME\.poshthemes" | Out-Null

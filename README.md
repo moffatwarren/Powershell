@@ -123,5 +123,6 @@ More themes: https://ohmyposh.dev/docs/themes
 | Plain prompt, no theme | Make sure you opened **PowerShell** (7), not **Windows PowerShell** (5.1). 5.1 reads a different profile (`Documents\WindowsPowerShell\`). Run `$PSVersionTable.PSVersion` to check. |
 | Prompt is themed but the background/colors are still default | The Terminal color scheme isn't applied. Run `.\windows-terminal\install-theme.ps1` and restart Terminal. |
 | Boxes or `?` instead of icons | Nerd Font missing or not selected. Run `oh-my-posh font install JetBrainsMono`, then set Terminal's font to `JetBrainsMono Nerd Font Mono`. |
+| Terminal says "Unable to find the following fonts: JetBrainsMono Nerd Font Mono" right after setup | The font files are installed but the Windows Font Cache service can't read them, so Terminal and Settings → Fonts don't see them. Re-run `setup.ps1`, which fixes the permissions. |
 | "running scripts is disabled on this system" | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` |
 | `oh-my-posh` / `zoxide` not recognized | Restart the terminal after installing them with winget. |
