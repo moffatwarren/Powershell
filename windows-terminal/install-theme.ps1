@@ -52,10 +52,13 @@ if (-not $defaults.PSObject.Properties["font"]) { $defaults | Add-Member -NotePr
 if ($defaults.font.face -notlike "*Nerd Font*") {
   $defaults.font | Add-Member -NotePropertyName face -NotePropertyValue $fontFace -Force
 }
+$defaults.font | Add-Member -NotePropertyName size -NotePropertyValue 10 -Force
 
-# Individual profiles override the defaults, so clear any per-profile scheme
+# Individual profiles override the defaults, so clear any per-profile scheme and font size
 foreach ($p in $settings.profiles.list) {
   if ($p.PSObject.Properties["colorScheme"]) { $p.PSObject.Properties.Remove("colorScheme") }
+  if ($p.PSObject.Properties["font"] -and $p.font.PSObject.Properties["size"]) { $p.font.PSObject.Properties.Remove("size") }
+  if ($p.PSObject.Properties["fontSize"]) { $p.PSObject.Properties.Remove("fontSize") }
 }
 
 # Open PowerShell 7 by default; a new PC defaults to Windows PowerShell 5.1, which doesn't load this profile
