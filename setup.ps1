@@ -99,6 +99,17 @@ if ((Test-Path $PROFILE) -and (Get-FileHash $PROFILE).Hash -eq (Get-FileHash $so
 }
 Unblock-File $PROFILE
 
+Step "Installing the haakonlife command to $HOME\.config\haakonlife"
+New-Item -ItemType Directory -Force "$HOME\.config\haakonlife" | Out-Null
+Copy-Item "$repo\haakonlife\stats.ps1" "$HOME\.config\haakonlife\" -Force
+Unblock-File "$HOME\.config\haakonlife\stats.ps1"
+# It reads the list of boards from the game's own repo; without it, it still prints play time
+$gameRepo = if ($env:HAAKONLIFE_REPO) { $env:HAAKONLIFE_REPO } else { "$HOME\GitHub\HaakonLife" }
+if (-not (Test-Path "$gameRepo\js\game.js")) {
+  Write-Host "The leaderboards need the game's repo at $gameRepo. Clone it with:" -ForegroundColor Yellow
+  Write-Host "  git clone https://github.com/moffatwarren/HaakonLife.git `"$gameRepo`""
+}
+
 Step "Applying Catppuccin Mocha to Windows Terminal"
 & "$repo\windows-terminal\install-theme.ps1"
 

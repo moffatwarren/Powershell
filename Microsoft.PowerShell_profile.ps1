@@ -142,6 +142,16 @@ function grep($regex, $dir) {
   }
 }
 
+# Haakon Life play time and leaderboards from the live database (setup.ps1 installs the script)
+function haakonlife {
+  $script = "$HOME\.config\haakonlife\stats.ps1"
+  if (-not (Test-Path $script)) {
+    Write-Warning "haakonlife isn't installed. Run setup.ps1 from the Powershell repo."
+    return
+  }
+  & $script @args
+}
+
 # Aliases
 Set-Alias -Name unzip -Value Expand-Archive
 
@@ -175,6 +185,7 @@ ${dim}────────────────────────�
   ${command}docs${reset}               ${accent}→${reset} ${desc}Documents folder${reset}
   ${command}ff <name>${reset}          ${accent}→${reset} ${desc}Search files${reset}
   ${command}grep <pattern> [path]${reset} ${accent}→${reset} ${desc}Search text${reset}
+  ${command}haakonlife${reset}         ${accent}→${reset} ${desc}Haakon Life play time + leaderboards${reset}
   ${command}head <file>${reset}        ${accent}→${reset} ${desc}First lines${reset}
   ${command}k9 <name>${reset}          ${accent}→${reset} ${desc}Kill process by name${reset}
   ${command}ll${reset}                 ${accent}→${reset} ${desc}List files${reset}

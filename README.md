@@ -15,6 +15,7 @@ My PowerShell 7 setup for Windows Terminal:
 | `Microsoft.PowerShell_profile.ps1` | The PowerShell profile, which runs every time a shell opens | `C:\Users\<you>\Documents\PowerShell\` |
 | `.poshthemes\*.omp.json` | oh-my-posh **prompt** themes, which style only the prompt line | `C:\Users\<you>\.poshthemes\` |
 | `windows-terminal\catppuccin-mocha.json` | Windows Terminal **color scheme** (background, text, and ANSI colors) | Added to Terminal's `settings.json` |
+| `haakonlife\stats.ps1` | The script behind the `haakonlife` command | `C:\Users\<you>\.config\haakonlife\` |
 | `windows-terminal\install-theme.ps1` | Adds the color scheme and Nerd Font to Windows Terminal | Run it from the repo |
 | `setup.bat` | Double-click installer: installs PowerShell 7 if needed, then runs `setup.ps1` | Run it from the repo |
 | `setup.ps1` | Does every step below automatically | Run it from the repo (or via `setup.bat`) |
@@ -115,6 +116,19 @@ oh-my-posh init pwsh --config "$HOME\.poshthemes\catppuccin.omp.json" | Invoke-E
 ```
 
 More themes: https://ohmyposh.dev/docs/themes
+
+## haakonlife
+
+`haakonlife` prints Haakon Life's play time, who's been on, Hall of Fame crowns, the most-played games, the latest scores and the Morale Madness leaders, straight from the game's live database. It only reads. It's a PowerShell port of the `haakonlife` fish command in [Linux-Setup](https://github.com/moffatwarren/Linux-Setup), so it needs nothing but PowerShell 7.
+
+The leaderboards need the game's repo checked out at `$HOME\GitHub\HaakonLife`: the script reads the list of boards from its `js\game.js` and the card count from `js\cardlist.js`, so a new game's board shows up without editing anything here. Keep it up to date with `git pull`, and set `$env:HAAKONLIFE_REPO` if it lives somewhere else. Without the repo it still prints the play time.
+
+To install it by hand:
+
+```powershell
+New-Item -ItemType Directory -Force $HOME\.config\haakonlife
+Copy-Item .\haakonlife\stats.ps1 $HOME\.config\haakonlife\
+```
 
 ## Troubleshooting
 
